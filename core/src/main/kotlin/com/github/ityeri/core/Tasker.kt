@@ -7,6 +7,10 @@ import com.github.ityeri.graph.serializable.Node
 import com.github.ityeri.utils.getLinks
 import com.github.ityeri.utils.normalizeUrl
 import com.github.ityeri.utils.toSha256
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.net.MalformedURLException
@@ -18,7 +22,7 @@ class Tasker(connection: Connection) {
     val taskRepository = TaskRepository(connection)
     val graphStub = Graph()
 
-    fun runCycle(limit: Int) {
+    suspend fun runCycle(limit: Int) {
         val taskIds = taskRepository.popTaskIds(limit)
 
         for (id in taskIds) {
@@ -30,7 +34,10 @@ class Tasker(connection: Connection) {
             val doc: Document
 
             try {
-                doc = Jsoup.connect(seedUrl).get()
+                HttpClient(CIO).use { client ->
+                    val html = client.get(seedUrl).bodyAsText()
+                    doc = Jsoup.parse(html)
+                }
             }
             catch (_: Exception) { continue }
 
