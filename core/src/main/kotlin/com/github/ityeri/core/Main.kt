@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 
 fun main() = runBlocking {
 
-    val threadCount = 1000
+    val taskerCount = 1
 
     val jdbcUrl = "jdbc:mysql://localhost:3306/" +
         "astroweave_db" +
@@ -22,7 +22,7 @@ fun main() = runBlocking {
 
     val taskerList = mutableListOf<Tasker>()
 
-    for (i in 0 until threadCount) {
+    for (i in 0 until taskerCount) {
         val tasker = Tasker(connection)
         taskerList.add(tasker)
 
