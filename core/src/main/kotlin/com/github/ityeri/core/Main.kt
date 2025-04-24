@@ -20,27 +20,30 @@ fun main() = runBlocking {
     val connection: Connection = DriverManager.getConnection(jdbcUrl, username, password)
     connection.autoCommit = false
 
-    val taskerList = mutableListOf<Tasker>()
+    val tasker = Tasker(connection)
+    tasker.runCycle(100)
 
-    for (i in 0 until taskerCount) {
-        val tasker = Tasker(connection)
-        taskerList.add(tasker)
+//    val taskerList = mutableListOf<Tasker>()
 
-        launch {
-            val taskerId = taskerList.indexOf(tasker)
-
-            try {
-                while (true) {
-                    println("$taskerId 번 작업자 주기 시작")
-                    tasker.runCycle(100)
-                    println("$taskerId 번 작업자 주기 끝")
-                }
-            }
-            catch (e: Exception) {
-                println("$taskerId 번 작업자가 다음과 같은 오류로 중단됨: ")
-                println(e)
-            }
-        }
-    }
+//    for (i in 0 until taskerCount) {
+//        val tasker = Tasker(connection)
+//        taskerList.add(tasker)
+//
+//        launch {
+//            val taskerId = taskerList.indexOf(tasker)
+//
+//            try {
+//                while (true) {
+//                    println("$taskerId 번 작업자 주기 시작")
+//                    tasker.runCycle(100)
+//                    println("$taskerId 번 작업자 주기 끝")
+//                }
+//            }
+//            catch (e: Exception) {
+//                println("$taskerId 번 작업자가 다음과 같은 오류로 중단됨: ")
+//                println(e)
+//            }
+//        }
+//    }
 
 }
