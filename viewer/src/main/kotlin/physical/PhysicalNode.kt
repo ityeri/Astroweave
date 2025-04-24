@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.CircleShape
 import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.github.ityeri.graph.BaseNode
+import kotlin.math.pow
 
 data class PhysicalNode(
     val graph: PhysicalGraph,
@@ -19,20 +20,15 @@ data class PhysicalNode(
     val y: Float
         get() = body.position.y
 
-    val displayRadius: Float
-        get() {
-            return getInDegrees().toFloat()
-        }
+    val physicalRadius: Float
+        get() = (getInDegrees() + getOutDegrees()) * 0.01f + graph.minNodeDist
 
-    val radius: Float
-        get() {
-            return getInDegrees().toFloat() + graph.minNodeDist
-        }
+    val displayRadius: Float
+        get() = physicalRadius
+
 
     val protectRadius: Float
-        get() {
-            return getInDegrees().toFloat() * 50f
-        }
+        get() = getInDegrees() + getOutDegrees().toFloat() * 0.1f
 
 //    var physicalRadius: Float
 //        get() = body.fixtureList.firstOrNull()!!.shape
@@ -73,7 +69,7 @@ data class PhysicalNode(
 
         // Shape: 물체의 형태를 정의하는칭구
         val shape = CircleShape()
-        shape.radius = radius
+        shape.radius = physicalRadius
 
         // FixtureDef: 물제의 물리적 성질을 정의하는 칭구 (shape 포함)
         val fixtureDef = FixtureDef().apply {
@@ -90,11 +86,17 @@ data class PhysicalNode(
         shape.dispose()
     }
 
-    override fun getInDegrees(): Int {
-        return graph.edges.count { it.endNode.name == this.name }
+    fun getInNodes(): List<PhysicalNode> {
+        return graph.edges.filter { it.endNode == this }.map { it.startNode }
+    }
+    fun getOutNodes(): List<PhysicalNode> {
+        return graph.edges.filter { it.startNode == this }.map { it.endNode }
     }
 
+    override fun getInDegrees(): Int {
+        return getInNodes().size
+    }
     override fun getOutDegrees(): Int {
-        return graph.edges.count { it.startNode.name == this.name }
+        return getOutNodes().size
     }
 }

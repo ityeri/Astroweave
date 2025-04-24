@@ -3,6 +3,8 @@ package physical
 import com.badlogic.gdx.physics.box2d.Joint
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef
 import com.github.ityeri.graph.BaseEdge
+import java.lang.Math.pow
+import kotlin.math.pow
 
 data class PhysicalEdge(
     val graph: PhysicalGraph,
@@ -14,7 +16,7 @@ data class PhysicalEdge(
 
     fun createJoint() {
 
-        val jointLength: Float = startNode.protectRadius + endNode.protectRadius
+        val jointLength: Float = (startNode.protectRadius + endNode.protectRadius) * 1.5f
 
         val jointDef = DistanceJointDef().apply {
             bodyA = startNode.body

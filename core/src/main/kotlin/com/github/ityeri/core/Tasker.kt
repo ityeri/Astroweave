@@ -9,6 +9,7 @@ import com.github.ityeri.utils.normalizeUrl
 import com.github.ityeri.utils.toSha256
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.net.MalformedURLException
 import java.sql.Connection
 
 class Tasker(connection: Connection) {
@@ -33,8 +34,12 @@ class Tasker(connection: Connection) {
             }
             catch (_: Exception) { continue }
 
-            doc.getLinks().forEach { url ->
-                val normalizedUrl = url.normalizeUrl()
+            for (url in doc.getLinks()) {
+                val normalizedUrl: String
+                try {
+                    normalizedUrl = url.normalizeUrl()
+                }
+                catch (_: MalformedURLException) { continue }
 
                 val newNodeStub = Node(graphStub, normalizedUrl)
 
@@ -49,6 +54,8 @@ class Tasker(connection: Connection) {
                 }
                 catch (_: IllegalArgumentException) {  }
             }
+
+            println("싸이클 완료")
         }
     }
 
