@@ -61,8 +61,6 @@ class Tasker(connection: Connection) {
                 }
                 catch (_: IllegalArgumentException) {  }
             }
-
-            println("싸이클 완료")
         }
     }
 

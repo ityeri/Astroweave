@@ -27,13 +27,16 @@ fun main() = runBlocking {
         taskerList.add(tasker)
 
         launch {
+            val taskerId = taskerList.indexOf(tasker)
+
             try {
                 while (true) {
+                    println("$taskerId 번 작업자 주기 시작")
                     tasker.runCycle(100)
+                    println("$taskerId 번 작업자 주기 끝")
                 }
             }
             catch (e: Exception) {
-                val taskerId = taskerList.indexOf(tasker)
                 println("$taskerId 번 작업자가 다음과 같은 오류로 중단됨: ")
                 println(e)
             }
