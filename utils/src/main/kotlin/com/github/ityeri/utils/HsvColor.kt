@@ -15,7 +15,7 @@ fun fromHsv(hue: Float, saturation: Float = 1f, value: Float = 1f, alpha: Float 
         3 -> Triple(0f, x, c)
         4 -> Triple(x, 0f, c)
         5 -> Triple(c, 0f, x)
-        else -> Triple(0f, 0f, 0f) // Fallback (shouldn't happen)
+        else -> Triple(0f, 0f, 0f)
     }
 
     return Color(r1 + m, g1 + m, b1 + m, alpha)
