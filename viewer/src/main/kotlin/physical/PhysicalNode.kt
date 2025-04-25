@@ -28,7 +28,7 @@ data class PhysicalNode(
 
 
     val protectRadius: Float
-        get() = getInDegrees() + getOutDegrees().toFloat() * 0.1f
+        get() = getInDegrees() + getOutDegrees().toFloat() * 0.5f
 
 //    var physicalRadius: Float
 //        get() = body.fixtureList.firstOrNull()!!.shape
