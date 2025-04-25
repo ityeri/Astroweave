@@ -108,13 +108,10 @@ abstract class ViewerAdapter : ApplicationAdapter() {
 //        camera.translate(offsetDeltaX, offsetDeltaY)
 //        println("${offsetDeltaX}, ${offsetDeltaY}")
 
-        val zoomDt = if (dt < 1) {
-            dt
-        } else {
-            1f
-        }
+        var zoomDt = zoomSoftness * dt
+        if (1 < zoomDt) { zoomDt = 1f }
 
-        camera.zoom += (goalZoom - camera.zoom) * zoomSoftness * zoomDt
+        camera.zoom += (goalZoom - camera.zoom) * zoomDt
 //        camera.translate(-offsetDeltaX, -offsetDeltaY)
 
         camera.update()
