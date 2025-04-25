@@ -98,7 +98,7 @@ class Viewer : ViewerAdapter() {
             scope.launch {
                 for (node in nodeChunk) {
 
-                    shapeRenderer.circle(node.x, node.y, node.displayRadius)ㄹㅇ
+                    shapeRenderer.circle(node.x, node.y, node.displayRadius)
 
                 }
             }
