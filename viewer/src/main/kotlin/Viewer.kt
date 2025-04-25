@@ -36,7 +36,7 @@ class Viewer : ViewerAdapter() {
     }
 
     fun compute() {
-        world.step(1/30f, 32, 1)
+        world.step(1/60f, 32, 1)
     }
 
     override fun create() {
