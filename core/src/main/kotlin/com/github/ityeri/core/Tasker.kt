@@ -11,11 +11,10 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.net.ConnectException
 import java.net.MalformedURLException
 import java.sql.Connection
 
@@ -25,7 +24,7 @@ class Tasker(connection: Connection, val client: HttpClient) {
     val taskRepository = TaskRepository(connection)
     val graphStub = Graph()
 
-    suspend fun runCycle(limit: Int) = coroutineScope {
+    suspend fun runCycle(limit: Int) {
         val taskIds = taskRepository.popTaskIds(limit)
 
         for (id in taskIds) {
@@ -34,25 +33,18 @@ class Tasker(connection: Connection, val client: HttpClient) {
             val currentNodeStub = Node(graphStub, currentNode.name)
 
             val seedUrl = graphRepository.getNodeById(id)!!.name.normalizeUrl()
-            var doc: Document? = null
+            val body: String
 
-            async(Dispatchers.IO) {
-                client.use { client ->
-                    try {
-                        val body = client.get(seedUrl).bodyAsText()
-                        doc = Jsoup.parse(body)
-                    }
-                    catch (e: Exception) {
-                        println("$seedUrl 에 요청중 에러 발생:")
-                        println(e)
-                    }
+            try {
+                body = withContext(Dispatchers.IO) {
+                    client.get(seedUrl).bodyAsText()
                 }
             }
+            catch (e: Exception) { continue }
 
-            if (doc == null) { continue }
+            val doc = Jsoup.parse(body)
 
-            println(doc!!.getLinks().size)
-            for (url in doc!!.getLinks()) {
+            for (url in doc.getLinks()) {
                 val normalizedUrl: String
                 try {
                     normalizedUrl = url.normalizeUrl()

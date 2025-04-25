@@ -1,12 +1,14 @@
 package com.github.ityeri.core
 
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
 import java.sql.Connection
 import java.sql.DriverManager
 import kotlinx.coroutines.*
 
-fun main() = runBlocking {
+fun main(): Unit = runBlocking {
 
-    val taskerCount = 1
+    val taskerCount = 1000
 
     val jdbcUrl = "jdbc:mysql://localhost:3306/" +
         "astroweave_db" +
@@ -20,30 +22,39 @@ fun main() = runBlocking {
     val connection: Connection = DriverManager.getConnection(jdbcUrl, username, password)
     connection.autoCommit = false
 
-    val tasker = Tasker(connection)
-    tasker.runCycle(100)
+    val httpClient = HttpClient(CIO)
 
-//    val taskerList = mutableListOf<Tasker>()
+    val taskerList = mutableListOf<Tasker>()
+    val jobs = mutableListOf<Job>()
 
-//    for (i in 0 until taskerCount) {
-//        val tasker = Tasker(connection)
-//        taskerList.add(tasker)
-//
-//        launch {
-//            val taskerId = taskerList.indexOf(tasker)
-//
-//            try {
-//                while (true) {
-//                    println("$taskerId 번 작업자 주기 시작")
-//                    tasker.runCycle(100)
-//                    println("$taskerId 번 작업자 주기 끝")
-//                }
-//            }
-//            catch (e: Exception) {
-//                println("$taskerId 번 작업자가 다음과 같은 오류로 중단됨: ")
-//                println(e)
-//            }
-//        }
-//    }
+    for (i in 0 until taskerCount) {
+        val tasker = Tasker(connection, httpClient)
+        taskerList.add(tasker)
+        println("새 작업 시작")
 
+        jobs.add(
+            launch {
+                val taskerId = taskerList.indexOf(tasker)
+
+                try {
+                    while (true) {
+                        println("$taskerId 번 작업자 주기 시작")
+                        tasker.runCycle(5)
+                        println("$taskerId 번 작업자 주기 끝")
+                        delay(10)
+                    }
+                }
+                catch (e: Exception) {
+                    println("$taskerId 번 작업자가 다음과 같은 오류로 중단됨: ")
+                    println(e)
+                }
+            }
+        )
+    }
+
+    for (job in jobs) {
+        job.join()
+    }
+
+    httpClient.close()
 }
