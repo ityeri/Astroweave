@@ -2,8 +2,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.github.ityeri.graph.database.GraphRepository
-import kotlinx.coroutines.*
 import physical.PhysicalGraph
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -16,8 +19,6 @@ class Viewer : ViewerAdapter() {
 
     var dt: Float = 1 / 60f
     val randomGenerateRange: Float = 1000f
-
-    val scope = CoroutineScope(Dispatchers.Default)
 
     init {
         val jdbcUrl = "jdbc:mysql://localhost:3306/" +
@@ -35,7 +36,7 @@ class Viewer : ViewerAdapter() {
     }
 
     fun compute() {
-        world.step(1 / 30f, 32, 1)
+        world.step(1/30f, 32, 1)
     }
 
     override fun create() {
@@ -63,7 +64,7 @@ class Viewer : ViewerAdapter() {
 
         println("total edge count: ${physicalGraph.edges.count()}")
 
-        scope.launch {
+        CoroutineScope(Dispatchers.Default).launch {
             delay(5000)
             while (true) {
                 compute()
@@ -79,32 +80,18 @@ class Viewer : ViewerAdapter() {
     override fun draw() {
         shapeRenderer.color = Color(1f, 1f, 1f, 0.2f)
 
-        val edgeJobs = physicalGraph.edges.chunked(128).map { edgeChunk ->
-            scope.launch {
-                for (edge in edgeChunk) {
-
-                    shapeRenderer.rectLine(
-                        edge.startNode.x, edge.startNode.y,
-                        edge.endNode.x, edge.endNode.y, 0.1f
-                    )
-
-                }
-            }
+        for (edge in physicalGraph.edges) {
+            shapeRenderer.rectLine(
+                edge.startNode.x, edge.startNode.y,
+                edge.endNode.x, edge.endNode.y, 0.1f
+            )
         }
 
-        edgeJobs.forEach { runBlocking { it.join() } }
+        shapeRenderer.color = Color(1f, 1f, 1f, 0.5f)
 
-        val nodeJobs = physicalGraph.nodes.chunked(128).map { nodeChunk ->
-            scope.launch {
-                for (node in nodeChunk) {
-
-                    shapeRenderer.circle(node.x, node.y, node.displayRadius)
-
-                }
-            }
+        for (node in physicalGraph.nodes) {
+            shapeRenderer.circle(node.x, node.y, node.displayRadius)
         }
-
-        nodeJobs.forEach { runBlocking { it.join() } }
     }
 
     fun getMouseHoveringNode() {
