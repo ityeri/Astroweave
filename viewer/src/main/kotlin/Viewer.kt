@@ -81,10 +81,12 @@ class Viewer : ViewerAdapter() {
         val edgeJobs = physicalGraph.edges.chunked(128).map { edgeChunk ->
             scope.launch {
                 for (edge in edgeChunk) {
-                    shapeRenderer.rectLine(
-                        edge.startNode.x, edge.startNode.y,
-                        edge.endNode.x, edge.endNode.y, 0.1f
-                    )
+                    synchronized(shapeRenderer) {
+                        shapeRenderer.rectLine(
+                            edge.startNode.x, edge.startNode.y,
+                            edge.endNode.x, edge.endNode.y, 0.1f
+                        )
+                    }
                 }
             }
         }
@@ -94,7 +96,9 @@ class Viewer : ViewerAdapter() {
         val nodeJobs = physicalGraph.nodes.chunked(128).map { nodeChunk ->
             scope.launch {
                 for (node in nodeChunk) {
-                    shapeRenderer.circle(node.x, node.y, node.displayRadius)
+                    synchronized(shapeRenderer) {
+                        shapeRenderer.circle(node.x, node.y, node.displayRadius)
+                    }
                 }
             }
         }
