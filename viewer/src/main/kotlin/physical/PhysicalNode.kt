@@ -21,10 +21,10 @@ data class PhysicalNode(
         get() = body.position.y
 
     val physicalRadius: Float
-        get() = (getInDegrees() + getOutDegrees()) * 0.01f + graph.minNodeDist
+        get() = (getInDegrees() + getOutDegrees()) * 0.01f
 
     val displayRadius: Float
-        get() = physicalRadius
+        get() = physicalRadius + graph.minNodeDist
 
 
     val protectRadius: Float
