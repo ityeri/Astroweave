@@ -21,6 +21,8 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+
+    implementation("io.mola.galimatias:galimatias:0.2.1")
 }
 
 kotlin {
