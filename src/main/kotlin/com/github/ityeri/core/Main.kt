@@ -1,8 +1,5 @@
 package com.github.ityeri.core
 
-import io.klogging.config.ANSI_CONSOLE
-import io.klogging.config.ANSI_INFO
-import io.klogging.config.loggingConfiguration
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
