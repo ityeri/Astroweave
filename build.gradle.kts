@@ -28,6 +28,8 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:8.0.03")
     implementation("io.klogging:klogging-jvm:0.7.3")
     implementation("io.klogging:slf4j-klogging:0.11.8")
+
+    implementation("org.jsoup:jsoup:1.22.2")
 }
 
 kotlin {

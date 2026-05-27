@@ -8,6 +8,6 @@ val appModule = module {
         URLGraphStoreMemoryImpl()
     }
     single<Crawler> {
-        Crawler(graphStore = get(), tickInterval = 1.0f)
+        Crawler(graphStore = get(), tickInterval = 0.1f)
     }
 }
