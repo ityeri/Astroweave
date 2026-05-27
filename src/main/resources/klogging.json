@@ -1,0 +1,22 @@
+{
+  "sinks": {
+    "stdout": {
+      "renderWith": "RENDER_ANSI",
+      "sendTo": "STDOUT"
+    }
+  },
+  "logging": [
+    {
+      "levelRanges": [
+        {
+          "from": "DEBUG",
+          "to": "FATAL",
+          "stopOnMatch": true,
+          "toSinks": [
+            "stdout"
+          ]
+        }
+      ]
+    }
+  ]
+}
