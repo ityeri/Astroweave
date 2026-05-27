@@ -1,6 +1,5 @@
-package com.github.ityeri.core
+package com.github.ityeri.astroweave
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.klogging.Klogging
 import io.mola.galimatias.URL
 import kotlinx.coroutines.delay

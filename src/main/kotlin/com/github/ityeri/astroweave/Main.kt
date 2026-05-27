@@ -1,4 +1,4 @@
-package com.github.ityeri.core
+package com.github.ityeri.astroweave
 
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin

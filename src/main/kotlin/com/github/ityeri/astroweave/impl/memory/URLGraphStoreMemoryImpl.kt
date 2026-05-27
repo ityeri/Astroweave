@@ -1,7 +1,7 @@
-package com.github.ityeri.core.impl.memory
+package com.github.ityeri.astroweave.impl.memory
 
-import com.github.ityeri.core.Edge
-import com.github.ityeri.core.URLGraphStore
+import com.github.ityeri.astroweave.Edge
+import com.github.ityeri.astroweave.URLGraphStore
 import io.mola.galimatias.URL
 
 class URLGraphStoreMemoryImpl : URLGraphStore {
