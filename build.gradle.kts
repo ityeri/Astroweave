@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.1.20-Beta1"
+    kotlin("jvm") version "2.3.0"
 }
 
 group = "com.github.ityeri"
@@ -21,8 +21,13 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.logger)
 
     implementation("io.mola.galimatias:galimatias:0.2.1")
+
+    implementation("io.github.oshai:kotlin-logging-jvm:8.0.03")
+    implementation("io.klogging:klogging-jvm:0.7.3")
+    implementation("io.klogging:slf4j-klogging:0.11.8")
 }
 
 kotlin {
