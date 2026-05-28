@@ -1,8 +1,9 @@
-package com.github.ityeri.astroweave
+package com.github.ityeri.astroweave.store.url
 
+import com.github.ityeri.astroweave.Edge
 import io.mola.galimatias.URL
 
-interface URLGraphStore {
+interface UrlGraphStore {
     fun add(url: URL)
     fun remove(url: URL): Boolean
     fun includes(url: URL): Boolean
