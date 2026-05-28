@@ -9,8 +9,7 @@
     {
       "levelRanges": [
         {
-          "from": "DEBUG",
-          "to": "FATAL",
+          "fromMinLevel": "INFO",
           "stopOnMatch": true,
           "toSinks": [
             "stdout"
